@@ -1,0 +1,12 @@
+logger:
+  msgLogsRefreshCycle: 24
+  errLogsRefreshCycle: 7
+dataSource:
+  host: localhost
+  port: 27017
+  auth: false # 是否启用身份验证
+  username: null
+  password: null
+  maxConn: 100
+  maxOpen: 100
+  timeout: 100 #单位：秒
