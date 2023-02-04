@@ -42,7 +42,7 @@ struct RegisterRequest {
 
 struct RegisterResponse {
     1: i64 status_code
-    2: string password
+    2: string status_msg
     3: i64 user_id
     4: string token
 }
