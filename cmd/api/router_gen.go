@@ -3,7 +3,7 @@
 package main
 
 import (
-	router "github.com/PICOF/simple-tiktok/biz/router"
+	router "github.com/PICOF/simple-tiktok/cmd/api/biz/router"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 

@@ -4,15 +4,15 @@ package tiktokapi
 
 import (
 	"context"
-
-	tiktokapi "github.com/PICOF/simple-tiktok/biz/model/tiktokapi"
+	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-// GetVedioList .
+// GetVideoList .
 // @router /douyin/feed/ [GET]
-func GetVedioList(ctx context.Context, c *app.RequestContext) {
+func GetVideoList(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req tiktokapi.FeedRequest
 	err = c.BindAndValidate(&req)
@@ -21,7 +21,17 @@ func GetVedioList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.FeedResponse)
+	resp, err := rpc.GetVideoList(ctx, &req)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.FeedResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+			NextTime:   nil,
+			VideoList:  nil,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

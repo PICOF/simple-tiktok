@@ -3,7 +3,7 @@
 package router
 
 import (
-	tiktokapi "github.com/PICOF/simple-tiktok/biz/router/tiktokapi"
+	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/router/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 

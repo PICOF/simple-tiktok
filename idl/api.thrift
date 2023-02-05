@@ -17,14 +17,14 @@ struct FeedRequest{
 }
 
 struct FeedResponse{
-    1: i64 status_code
+    1: i32 status_code
     2: optional string status_msg
     3: optional i64 next_time
     4: optional list<VideoInfo> video_list
 }
 
 service FeedService{
-    FeedResponse GetVedioList(1: FeedRequest request) (api.get="/douyin/feed/")
+    FeedResponse GetVideoList(1: FeedRequest request) (api.get="/douyin/feed/")
 }
 
 struct UserInfo{
@@ -36,8 +36,8 @@ struct UserInfo{
 }
 
 struct RegisterRequest {
-    1: string username (api.query="username", api.vd="len($) >= 0")
-    2: string password (api.query="password", api.vd="len($) >= 0")
+    1: string username (api.query="username")
+    2: string password (api.query="password")
 }
 
 struct RegisterResponse {
@@ -48,8 +48,8 @@ struct RegisterResponse {
 }
 
 struct LoginRequest {
-    1: string username (api.query="username", api.vd="len($) >= 0")
-    2: string password (api.query="password", api.vd="len($) >= 0")
+    1: string username (api.query="username")
+    2: string password (api.query="password")
 }
 
 struct LoginResponse {
@@ -60,8 +60,8 @@ struct LoginResponse {
 }
 
 struct UserInfoRequest {
-    1: string user_id (api.query="user_id", api.vd="len($) >= 0")
-    2: string token (api.query="token", api.vd="len($) >= 0")
+    1: string user_id (api.query="user_id")
+    2: string token (api.query="token")
 }
 
 struct UserInfoResponse {

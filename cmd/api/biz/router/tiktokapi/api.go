@@ -3,7 +3,7 @@
 package Tiktokapi
 
 import (
-	tiktokapi "github.com/PICOF/simple-tiktok/biz/handler/tiktokapi"
+	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/handler/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -43,7 +43,7 @@ func Register(r *server.Hertz) {
 		}
 		{
 			_feed := _douyin.Group("/feed", _feedMw()...)
-			_feed.GET("/", append(_getvediolistMw(), tiktokapi.GetVedioList)...)
+			_feed.GET("/", append(_getvideolistMw(), tiktokapi.GetVideoList)...)
 		}
 		{
 			_message := _douyin.Group("/message", _messageMw()...)

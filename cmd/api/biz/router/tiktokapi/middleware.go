@@ -71,7 +71,7 @@ func _feedMw() []app.HandlerFunc {
 	return nil
 }
 
-func _getvediolistMw() []app.HandlerFunc {
+func _getvideolistMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

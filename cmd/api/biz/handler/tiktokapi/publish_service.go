@@ -5,7 +5,7 @@ package tiktokapi
 import (
 	"context"
 
-	tiktokapi "github.com/PICOF/simple-tiktok/biz/model/tiktokapi"
+	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
