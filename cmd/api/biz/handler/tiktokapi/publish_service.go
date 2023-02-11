@@ -4,8 +4,8 @@ package tiktokapi
 
 import (
 	"context"
-
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/publish"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -20,10 +20,26 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
+	data, exist := c.Get("data")
+	if !exist {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	}
+	req.Data = data.([]byte)
+	resp, err := publish.Publish(ctx, &req, c.GetInt64("user_id"))
 
-	resp := new(tiktokapi.PublishResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetPublishList .
@@ -37,7 +53,16 @@ func GetPublishList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.PublishListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := publish.GetPublishList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

@@ -8,7 +8,7 @@ const (
 	TokenInvalid
 )
 
-func (s Status) GetInfo() (int32, string) {
+func (s Status) GetInfo() (int64, string) {
 	switch s {
 	case Success:
 		return 0, "成功"

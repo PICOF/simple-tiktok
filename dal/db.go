@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func getDB() (myDB *gorm.DB) {
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}))
 	if err != nil {
-		fmt.Println("数据库链接error:", err)
+		log.Fatal(err)
 	}
 
 	sqlDB, err := myDB.DB()

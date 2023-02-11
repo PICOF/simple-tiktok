@@ -19,7 +19,8 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "FeedService"
 	handlerType := (*feed.FeedService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"GetVideoList": kitex.NewMethodInfo(getVideoListHandler, newFeedServiceGetVideoListArgs, newFeedServiceGetVideoListResult, false),
+		"GetVideoList":     kitex.NewMethodInfo(getVideoListHandler, newFeedServiceGetVideoListArgs, newFeedServiceGetVideoListResult, false),
+		"GetVideoListById": kitex.NewMethodInfo(getVideoListByIdHandler, newFeedServiceGetVideoListByIdArgs, newFeedServiceGetVideoListByIdResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "feed",
@@ -53,6 +54,24 @@ func newFeedServiceGetVideoListResult() interface{} {
 	return feed.NewFeedServiceGetVideoListResult()
 }
 
+func getVideoListByIdHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*feed.FeedServiceGetVideoListByIdArgs)
+	realResult := result.(*feed.FeedServiceGetVideoListByIdResult)
+	success, err := handler.(feed.FeedService).GetVideoListById(ctx, realArg.Request)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newFeedServiceGetVideoListByIdArgs() interface{} {
+	return feed.NewFeedServiceGetVideoListByIdArgs()
+}
+
+func newFeedServiceGetVideoListByIdResult() interface{} {
+	return feed.NewFeedServiceGetVideoListByIdResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -68,6 +87,16 @@ func (p *kClient) GetVideoList(ctx context.Context, request *feed.FeedRequest) (
 	_args.Request = request
 	var _result feed.FeedServiceGetVideoListResult
 	if err = p.c.Call(ctx, "GetVideoList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetVideoListById(ctx context.Context, request *feed.GetByIDRequest) (r *feed.FeedResponse, err error) {
+	var _args feed.FeedServiceGetVideoListByIdArgs
+	_args.Request = request
+	var _result feed.FeedServiceGetVideoListByIdResult
+	if err = p.c.Call(ctx, "GetVideoListById", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

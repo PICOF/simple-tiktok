@@ -12,7 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	LikeAction(ctx context.Context, request *favorite.LikeRequest, callOptions ...callopt.Option) (r *favorite.LikeResponse, err error)
-	GetLikeList(ctx context.Context, request *favorite.LikeRequest, callOptions ...callopt.Option) (r *favorite.LikeListResponse, err error)
+	GetLikeList(ctx context.Context, request *favorite.LikeListRequest, callOptions ...callopt.Option) (r *favorite.LikeListResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -49,7 +49,7 @@ func (p *kFavoriteServiceClient) LikeAction(ctx context.Context, request *favori
 	return p.kClient.LikeAction(ctx, request)
 }
 
-func (p *kFavoriteServiceClient) GetLikeList(ctx context.Context, request *favorite.LikeRequest, callOptions ...callopt.Option) (r *favorite.LikeListResponse, err error) {
+func (p *kFavoriteServiceClient) GetLikeList(ctx context.Context, request *favorite.LikeListRequest, callOptions ...callopt.Option) (r *favorite.LikeListResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetLikeList(ctx, request)
 }

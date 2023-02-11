@@ -3,9 +3,9 @@ namespace go favorite
 include "feed.thrift"
 
 struct LikeRequest {
-    1: string token (api.query="token")
-    2: string video_id (api.query="video_id")
-    3: string action_type (api.query="action_type")
+    1: i64 user_id
+    2: i64 video_id
+    3: bool action_type
 }
 
 struct LikeResponse {
@@ -14,8 +14,8 @@ struct LikeResponse {
 }
 
 struct LikeListRequest {
-    1: string user_id (api.query="user_id")
-    2: string token (api.query="token")
+    1: i64 user_id
+    2: i64 query_id
 }
 
 struct LikeListResponse {
@@ -25,6 +25,6 @@ struct LikeListResponse {
 }
 
 service FavoriteService {
-    LikeResponse LikeAction(1: LikeRequest request) (api.post="/douyin/favorite/action/")
-    LikeListResponse GetLikeList(1: LikeRequest request) (api.get="/douyin/favorite/list/")
+    LikeResponse LikeAction(1: LikeRequest request)
+    LikeListResponse GetLikeList(1: LikeListRequest request)
 }

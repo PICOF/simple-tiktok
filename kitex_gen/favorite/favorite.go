@@ -11,9 +11,9 @@ import (
 )
 
 type LikeRequest struct {
-	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	VideoId    string `thrift:"video_id,2" frugal:"2,default,string" json:"video_id"`
-	ActionType string `thrift:"action_type,3" frugal:"3,default,string" json:"action_type"`
+	UserId     int64 `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
+	VideoId    int64 `thrift:"video_id,2" frugal:"2,default,i64" json:"video_id"`
+	ActionType bool  `thrift:"action_type,3" frugal:"3,default,bool" json:"action_type"`
 }
 
 func NewLikeRequest() *LikeRequest {
@@ -24,29 +24,29 @@ func (p *LikeRequest) InitDefault() {
 	*p = LikeRequest{}
 }
 
-func (p *LikeRequest) GetToken() (v string) {
-	return p.Token
+func (p *LikeRequest) GetUserId() (v int64) {
+	return p.UserId
 }
 
-func (p *LikeRequest) GetVideoId() (v string) {
+func (p *LikeRequest) GetVideoId() (v int64) {
 	return p.VideoId
 }
 
-func (p *LikeRequest) GetActionType() (v string) {
+func (p *LikeRequest) GetActionType() (v bool) {
 	return p.ActionType
 }
-func (p *LikeRequest) SetToken(val string) {
-	p.Token = val
+func (p *LikeRequest) SetUserId(val int64) {
+	p.UserId = val
 }
-func (p *LikeRequest) SetVideoId(val string) {
+func (p *LikeRequest) SetVideoId(val int64) {
 	p.VideoId = val
 }
-func (p *LikeRequest) SetActionType(val string) {
+func (p *LikeRequest) SetActionType(val bool) {
 	p.ActionType = val
 }
 
 var fieldIDToName_LikeRequest = map[int16]string{
-	1: "token",
+	1: "user_id",
 	2: "video_id",
 	3: "action_type",
 }
@@ -71,7 +71,7 @@ func (p *LikeRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -81,7 +81,7 @@ func (p *LikeRequest) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -91,7 +91,7 @@ func (p *LikeRequest) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 3:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -131,16 +131,16 @@ ReadStructEndError:
 }
 
 func (p *LikeRequest) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.Token = v
+		p.UserId = v
 	}
 	return nil
 }
 
 func (p *LikeRequest) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.VideoId = v
@@ -149,7 +149,7 @@ func (p *LikeRequest) ReadField2(iprot thrift.TProtocol) error {
 }
 
 func (p *LikeRequest) ReadField3(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
 		p.ActionType = v
@@ -195,10 +195,10 @@ WriteStructEndError:
 }
 
 func (p *LikeRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("token", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Token); err != nil {
+	if err := oprot.WriteI64(p.UserId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -212,10 +212,10 @@ WriteFieldEndError:
 }
 
 func (p *LikeRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("video_id", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("video_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.VideoId); err != nil {
+	if err := oprot.WriteI64(p.VideoId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -229,10 +229,10 @@ WriteFieldEndError:
 }
 
 func (p *LikeRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("action_type", thrift.STRING, 3); err != nil {
+	if err = oprot.WriteFieldBegin("action_type", thrift.BOOL, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ActionType); err != nil {
+	if err := oprot.WriteBool(p.ActionType); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -258,7 +258,7 @@ func (p *LikeRequest) DeepEqual(ano *LikeRequest) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Token) {
+	if !p.Field1DeepEqual(ano.UserId) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.VideoId) {
@@ -270,23 +270,23 @@ func (p *LikeRequest) DeepEqual(ano *LikeRequest) bool {
 	return true
 }
 
-func (p *LikeRequest) Field1DeepEqual(src string) bool {
+func (p *LikeRequest) Field1DeepEqual(src int64) bool {
 
-	if strings.Compare(p.Token, src) != 0 {
+	if p.UserId != src {
 		return false
 	}
 	return true
 }
-func (p *LikeRequest) Field2DeepEqual(src string) bool {
+func (p *LikeRequest) Field2DeepEqual(src int64) bool {
 
-	if strings.Compare(p.VideoId, src) != 0 {
+	if p.VideoId != src {
 		return false
 	}
 	return true
 }
-func (p *LikeRequest) Field3DeepEqual(src string) bool {
+func (p *LikeRequest) Field3DeepEqual(src bool) bool {
 
-	if strings.Compare(p.ActionType, src) != 0 {
+	if p.ActionType != src {
 		return false
 	}
 	return true
@@ -516,8 +516,8 @@ func (p *LikeResponse) Field2DeepEqual(src string) bool {
 }
 
 type LikeListRequest struct {
-	UserId string `thrift:"user_id,1" frugal:"1,default,string" json:"user_id"`
-	Token  string `thrift:"token,2" frugal:"2,default,string" json:"token"`
+	UserId  int64 `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
+	QueryId int64 `thrift:"query_id,2" frugal:"2,default,i64" json:"query_id"`
 }
 
 func NewLikeListRequest() *LikeListRequest {
@@ -528,23 +528,23 @@ func (p *LikeListRequest) InitDefault() {
 	*p = LikeListRequest{}
 }
 
-func (p *LikeListRequest) GetUserId() (v string) {
+func (p *LikeListRequest) GetUserId() (v int64) {
 	return p.UserId
 }
 
-func (p *LikeListRequest) GetToken() (v string) {
-	return p.Token
+func (p *LikeListRequest) GetQueryId() (v int64) {
+	return p.QueryId
 }
-func (p *LikeListRequest) SetUserId(val string) {
+func (p *LikeListRequest) SetUserId(val int64) {
 	p.UserId = val
 }
-func (p *LikeListRequest) SetToken(val string) {
-	p.Token = val
+func (p *LikeListRequest) SetQueryId(val int64) {
+	p.QueryId = val
 }
 
 var fieldIDToName_LikeListRequest = map[int16]string{
 	1: "user_id",
-	2: "token",
+	2: "query_id",
 }
 
 func (p *LikeListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -567,7 +567,7 @@ func (p *LikeListRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -577,7 +577,7 @@ func (p *LikeListRequest) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -617,7 +617,7 @@ ReadStructEndError:
 }
 
 func (p *LikeListRequest) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.UserId = v
@@ -626,10 +626,10 @@ func (p *LikeListRequest) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *LikeListRequest) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.Token = v
+		p.QueryId = v
 	}
 	return nil
 }
@@ -668,10 +668,10 @@ WriteStructEndError:
 }
 
 func (p *LikeListRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UserId); err != nil {
+	if err := oprot.WriteI64(p.UserId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -685,10 +685,10 @@ WriteFieldEndError:
 }
 
 func (p *LikeListRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("token", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("query_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Token); err != nil {
+	if err := oprot.WriteI64(p.QueryId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -717,22 +717,22 @@ func (p *LikeListRequest) DeepEqual(ano *LikeListRequest) bool {
 	if !p.Field1DeepEqual(ano.UserId) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.Token) {
+	if !p.Field2DeepEqual(ano.QueryId) {
 		return false
 	}
 	return true
 }
 
-func (p *LikeListRequest) Field1DeepEqual(src string) bool {
+func (p *LikeListRequest) Field1DeepEqual(src int64) bool {
 
-	if strings.Compare(p.UserId, src) != 0 {
+	if p.UserId != src {
 		return false
 	}
 	return true
 }
-func (p *LikeListRequest) Field2DeepEqual(src string) bool {
+func (p *LikeListRequest) Field2DeepEqual(src int64) bool {
 
-	if strings.Compare(p.Token, src) != 0 {
+	if p.QueryId != src {
 		return false
 	}
 	return true
@@ -1075,7 +1075,7 @@ func (p *LikeListResponse) Field4DeepEqual(src []*feed.VideoInfo) bool {
 type FavoriteService interface {
 	LikeAction(ctx context.Context, request *LikeRequest) (r *LikeResponse, err error)
 
-	GetLikeList(ctx context.Context, request *LikeRequest) (r *LikeListResponse, err error)
+	GetLikeList(ctx context.Context, request *LikeListRequest) (r *LikeListResponse, err error)
 }
 
 type FavoriteServiceClient struct {
@@ -1113,7 +1113,7 @@ func (p *FavoriteServiceClient) LikeAction(ctx context.Context, request *LikeReq
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *FavoriteServiceClient) GetLikeList(ctx context.Context, request *LikeRequest) (r *LikeListResponse, err error) {
+func (p *FavoriteServiceClient) GetLikeList(ctx context.Context, request *LikeListRequest) (r *LikeListResponse, err error) {
 	var _args FavoriteServiceGetLikeListArgs
 	_args.Request = request
 	var _result FavoriteServiceGetLikeListResult
@@ -1608,7 +1608,7 @@ func (p *FavoriteServiceLikeActionResult) Field0DeepEqual(src *LikeResponse) boo
 }
 
 type FavoriteServiceGetLikeListArgs struct {
-	Request *LikeRequest `thrift:"request,1" frugal:"1,default,LikeRequest" json:"request"`
+	Request *LikeListRequest `thrift:"request,1" frugal:"1,default,LikeListRequest" json:"request"`
 }
 
 func NewFavoriteServiceGetLikeListArgs() *FavoriteServiceGetLikeListArgs {
@@ -1619,15 +1619,15 @@ func (p *FavoriteServiceGetLikeListArgs) InitDefault() {
 	*p = FavoriteServiceGetLikeListArgs{}
 }
 
-var FavoriteServiceGetLikeListArgs_Request_DEFAULT *LikeRequest
+var FavoriteServiceGetLikeListArgs_Request_DEFAULT *LikeListRequest
 
-func (p *FavoriteServiceGetLikeListArgs) GetRequest() (v *LikeRequest) {
+func (p *FavoriteServiceGetLikeListArgs) GetRequest() (v *LikeListRequest) {
 	if !p.IsSetRequest() {
 		return FavoriteServiceGetLikeListArgs_Request_DEFAULT
 	}
 	return p.Request
 }
-func (p *FavoriteServiceGetLikeListArgs) SetRequest(val *LikeRequest) {
+func (p *FavoriteServiceGetLikeListArgs) SetRequest(val *LikeListRequest) {
 	p.Request = val
 }
 
@@ -1699,7 +1699,7 @@ ReadStructEndError:
 }
 
 func (p *FavoriteServiceGetLikeListArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Request = NewLikeRequest()
+	p.Request = NewLikeListRequest()
 	if err := p.Request.Read(iprot); err != nil {
 		return err
 	}
@@ -1771,7 +1771,7 @@ func (p *FavoriteServiceGetLikeListArgs) DeepEqual(ano *FavoriteServiceGetLikeLi
 	return true
 }
 
-func (p *FavoriteServiceGetLikeListArgs) Field1DeepEqual(src *LikeRequest) bool {
+func (p *FavoriteServiceGetLikeListArgs) Field1DeepEqual(src *LikeListRequest) bool {
 
 	if !p.Request.DeepEqual(src) {
 		return false

@@ -4,6 +4,7 @@ package tiktokapi
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/favorite"
 
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -21,23 +22,41 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.LikeResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := favorite.Action(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetLikeList .
 // @router /douyin/favorite/list/ [GET]
 func GetLikeList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req tiktokapi.LikeRequest
+	var req tiktokapi.LikeListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(tiktokapi.LikeListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := favorite.GetFavoriteList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

@@ -2,13 +2,12 @@ package jwt
 
 import (
 	"fmt"
-	"github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"log"
 	"testing"
 )
 
 func TestJWT(t *testing.T) {
-	token, err := JWTUtil.CreateToken(tiktokapi.UserInfo{ID: 123, Name: "", FollowCount: 1, FollowerCount: 1, IsFollow: false})
+	token, err := JWTUtil.CreateToken(114514)
 	if err != nil {
 		log.Println("Error", err)
 		return

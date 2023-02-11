@@ -92,7 +92,7 @@ func (p *kClient) LikeAction(ctx context.Context, request *favorite.LikeRequest)
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetLikeList(ctx context.Context, request *favorite.LikeRequest) (r *favorite.LikeListResponse, err error) {
+func (p *kClient) GetLikeList(ctx context.Context, request *favorite.LikeListRequest) (r *favorite.LikeListResponse, err error) {
 	var _args favorite.FavoriteServiceGetLikeListArgs
 	_args.Request = request
 	var _result favorite.FavoriteServiceGetLikeListResult

@@ -1,7 +1,7 @@
 MySQL:
   DSN:
     username: root
-    password: niftyjetcar287
+    password: kaiser
     host: localhost
     port: 3306
     database: tiktok

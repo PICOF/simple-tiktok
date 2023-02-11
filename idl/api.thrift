@@ -42,7 +42,7 @@ struct RegisterRequest {
 
 struct RegisterResponse {
     1: i64 status_code
-    2: string password
+    2: string status_msg
     3: i64 user_id
     4: string token
 }
@@ -71,7 +71,7 @@ struct UserInfoResponse {
 }
 
 service UserService {
-    RegisterResponse UserRegist(1: RegisterRequest request)(api.post="/douyin/user/register/")
+    RegisterResponse UserRegister(1: RegisterRequest request)(api.post="/douyin/user/register/")
     LoginResponse UserLogin(1: LoginRequest request)(api.post="/douyin/user/login/")
     UserInfoResponse GetUserInfo(1: UserInfoRequest request)(api.get="/douyin/user/")
 }
@@ -127,7 +127,7 @@ struct LikeListResponse {
 
 service FavoriteService {
     LikeResponse LikeAction(1: LikeRequest request) (api.post="/douyin/favorite/action/")
-    LikeListResponse GetLikeList(1: LikeRequest request) (api.get="/douyin/favorite/list/")
+    LikeListResponse GetLikeList(1: LikeListRequest request) (api.get="/douyin/favorite/list/")
 }
 
 struct CommentInfo {

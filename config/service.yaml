@@ -1,0 +1,8 @@
+etcd:
+  address:
+    - "127.0.0.1:2379"
+exportEndpoint: ":4317"
+server:
+  name: "tiktokapi"
+  address: "127.0.0.1:8888"
+minio:

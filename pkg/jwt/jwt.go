@@ -6,8 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"time"
 
-	model "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
-	jwt "github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 const ConfigName = "jwt"
@@ -27,27 +26,27 @@ type JWT struct {
 }
 
 type CustomClaims struct {
-	UserInfo model.UserInfo
+	UserId int64
 	jwt.RegisteredClaims
 }
 
 func init() {
 	JWTConfig = config.GetConfig(ConfigName)
-	expire = JWTConfig.GetDuration("expireTime")
+	expire = JWTConfig.GetDuration("timeout")
 	JWTUtil = NewJWT()
 }
 
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(JWTConfig.GetString("signKey")),
+		[]byte(JWTConfig.GetString("secretKey")),
 	}
 }
 
 // 创建 token
-func (j *JWT) CreateToken(userInfo model.UserInfo) (string, error) {
+func (j *JWT) CreateToken(userId int64) (string, error) {
 	startTime := time.Now().Add(-time.Second)
 	claims := CustomClaims{
-		UserInfo: userInfo,
+		UserId: userId,
 		RegisteredClaims: jwt.RegisteredClaims{
 			NotBefore: jwt.NewNumericDate(startTime),             // 签名生效时间
 			ExpiresAt: jwt.NewNumericDate(startTime.Add(expire)), // 过期时间 7天  配置文件

@@ -4,8 +4,9 @@ package tiktokapi
 
 import (
 	"context"
-	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
-	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/feed"
+
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -20,8 +21,7 @@ func GetVideoList(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
-	resp, err := rpc.GetVideoList(ctx, &req)
+	resp, err := feed.GetVideoList(ctx, &req, c.GetInt64("user_id"))
 
 	if err != nil {
 		msg := "请求远程服务时出错"

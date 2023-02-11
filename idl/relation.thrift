@@ -4,8 +4,8 @@ include "user.thrift"
 
 struct FollowRequest {
     1: string token (api.query="token")
-    2: string to_user_id (api.query="to_user_id")
-    3: string action_type (api.query="action_type")
+    2: string to_user_id
+    3: string action_type
 }
 
 struct FollowResponse {

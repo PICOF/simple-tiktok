@@ -634,7 +634,7 @@ func (p *RegisterRequest) Field2DeepEqual(src string) bool {
 
 type RegisterResponse struct {
 	StatusCode int64  `thrift:"status_code,1" frugal:"1,default,i64" json:"status_code"`
-	Password   string `thrift:"password,2" frugal:"2,default,string" json:"password"`
+	StatusMsg  string `thrift:"status_msg,2" frugal:"2,default,string" json:"status_msg"`
 	UserId     int64  `thrift:"user_id,3" frugal:"3,default,i64" json:"user_id"`
 	Token      string `thrift:"token,4" frugal:"4,default,string" json:"token"`
 }
@@ -651,8 +651,8 @@ func (p *RegisterResponse) GetStatusCode() (v int64) {
 	return p.StatusCode
 }
 
-func (p *RegisterResponse) GetPassword() (v string) {
-	return p.Password
+func (p *RegisterResponse) GetStatusMsg() (v string) {
+	return p.StatusMsg
 }
 
 func (p *RegisterResponse) GetUserId() (v int64) {
@@ -665,8 +665,8 @@ func (p *RegisterResponse) GetToken() (v string) {
 func (p *RegisterResponse) SetStatusCode(val int64) {
 	p.StatusCode = val
 }
-func (p *RegisterResponse) SetPassword(val string) {
-	p.Password = val
+func (p *RegisterResponse) SetStatusMsg(val string) {
+	p.StatusMsg = val
 }
 func (p *RegisterResponse) SetUserId(val int64) {
 	p.UserId = val
@@ -677,7 +677,7 @@ func (p *RegisterResponse) SetToken(val string) {
 
 var fieldIDToName_RegisterResponse = map[int16]string{
 	1: "status_code",
-	2: "password",
+	2: "status_msg",
 	3: "user_id",
 	4: "token",
 }
@@ -784,7 +784,7 @@ func (p *RegisterResponse) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.Password = v
+		p.StatusMsg = v
 	}
 	return nil
 }
@@ -866,10 +866,10 @@ WriteFieldEndError:
 }
 
 func (p *RegisterResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("password", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("status_msg", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Password); err != nil {
+	if err := oprot.WriteString(p.StatusMsg); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -932,7 +932,7 @@ func (p *RegisterResponse) DeepEqual(ano *RegisterResponse) bool {
 	if !p.Field1DeepEqual(ano.StatusCode) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.Password) {
+	if !p.Field2DeepEqual(ano.StatusMsg) {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.UserId) {
@@ -953,7 +953,7 @@ func (p *RegisterResponse) Field1DeepEqual(src int64) bool {
 }
 func (p *RegisterResponse) Field2DeepEqual(src string) bool {
 
-	if strings.Compare(p.Password, src) != 0 {
+	if strings.Compare(p.StatusMsg, src) != 0 {
 		return false
 	}
 	return true
@@ -1586,8 +1586,8 @@ func (p *LoginResponse) Field4DeepEqual(src *string) bool {
 }
 
 type UserInfoRequest struct {
-	UserId string `thrift:"user_id,1" frugal:"1,default,string" json:"user_id"`
-	Token  string `thrift:"token,2" frugal:"2,default,string" json:"token"`
+	UserId  int64 `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
+	QueryId int64 `thrift:"query_id,2" frugal:"2,default,i64" json:"query_id"`
 }
 
 func NewUserInfoRequest() *UserInfoRequest {
@@ -1598,23 +1598,23 @@ func (p *UserInfoRequest) InitDefault() {
 	*p = UserInfoRequest{}
 }
 
-func (p *UserInfoRequest) GetUserId() (v string) {
+func (p *UserInfoRequest) GetUserId() (v int64) {
 	return p.UserId
 }
 
-func (p *UserInfoRequest) GetToken() (v string) {
-	return p.Token
+func (p *UserInfoRequest) GetQueryId() (v int64) {
+	return p.QueryId
 }
-func (p *UserInfoRequest) SetUserId(val string) {
+func (p *UserInfoRequest) SetUserId(val int64) {
 	p.UserId = val
 }
-func (p *UserInfoRequest) SetToken(val string) {
-	p.Token = val
+func (p *UserInfoRequest) SetQueryId(val int64) {
+	p.QueryId = val
 }
 
 var fieldIDToName_UserInfoRequest = map[int16]string{
 	1: "user_id",
-	2: "token",
+	2: "query_id",
 }
 
 func (p *UserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1637,7 +1637,7 @@ func (p *UserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1647,7 +1647,7 @@ func (p *UserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1687,7 +1687,7 @@ ReadStructEndError:
 }
 
 func (p *UserInfoRequest) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.UserId = v
@@ -1696,10 +1696,10 @@ func (p *UserInfoRequest) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *UserInfoRequest) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.Token = v
+		p.QueryId = v
 	}
 	return nil
 }
@@ -1738,10 +1738,10 @@ WriteStructEndError:
 }
 
 func (p *UserInfoRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UserId); err != nil {
+	if err := oprot.WriteI64(p.UserId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1755,10 +1755,10 @@ WriteFieldEndError:
 }
 
 func (p *UserInfoRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("token", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("query_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Token); err != nil {
+	if err := oprot.WriteI64(p.QueryId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1787,22 +1787,22 @@ func (p *UserInfoRequest) DeepEqual(ano *UserInfoRequest) bool {
 	if !p.Field1DeepEqual(ano.UserId) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.Token) {
+	if !p.Field2DeepEqual(ano.QueryId) {
 		return false
 	}
 	return true
 }
 
-func (p *UserInfoRequest) Field1DeepEqual(src string) bool {
+func (p *UserInfoRequest) Field1DeepEqual(src int64) bool {
 
-	if strings.Compare(p.UserId, src) != 0 {
+	if p.UserId != src {
 		return false
 	}
 	return true
 }
-func (p *UserInfoRequest) Field2DeepEqual(src string) bool {
+func (p *UserInfoRequest) Field2DeepEqual(src int64) bool {
 
-	if strings.Compare(p.Token, src) != 0 {
+	if p.QueryId != src {
 		return false
 	}
 	return true

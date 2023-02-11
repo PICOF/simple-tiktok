@@ -3,29 +3,36 @@ package operation
 import (
 	"context"
 	"github.com/PICOF/simple-tiktok/dal"
-	"github.com/PICOF/simple-tiktok/kitex_gen/user"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/go-sql-driver/mysql"
 )
 
-func GetUserById(ctx context.Context, userId int64, queryId int64) (user *user.UserInfo, err error) {
-	var userInfo = &TUserInfo{}
-	err = dal.DB.WithContext(ctx).First(userInfo, queryId).Error
+func GetUser(ctx context.Context, queryId int64) (user TUserInfo, err error) {
+	err = dal.DB.WithContext(ctx).First(&user, queryId).Error
 	if err != nil {
-		return nil, err
+		klog.CtxErrorf(ctx, "An error occurred while getting user information: %v", err)
+		return
 	}
-	user, err = ConvertUserInfo(ctx, userId, userInfo)
 	return
 }
-func ConvertUserInfo(ctx context.Context, userId int64, info *TUserInfo) (res *user.UserInfo, err error) {
-	isFollow, err := IsFollow(ctx, info.Id, userId)
+func WriteUserInfo(ctx context.Context, info *TUserInfo) (userId int64, err error) {
+	err = dal.DB.WithContext(ctx).Create(info).Error
 	if err != nil {
-		return nil, err
+		if err.(*mysql.MySQLError).Number == 1062 {
+			klog.CtxWarnf(ctx, "Duplicate user name causes write failure: username: %s", info.Username)
+		} else {
+			klog.CtxErrorf(ctx, "An error occurred while writing user data: %v", err)
+		}
 	}
-	res = &user.UserInfo{
-		Id:            info.Id,
-		Name:          info.Username,
-		FollowCount:   info.FollowCount,
-		FollowerCount: info.FollowerCount,
-		IsFollow:      isFollow,
+	userId = info.Id
+	return
+}
+func GetUserByName(ctx context.Context, username string) (user *TUserInfo, err error) {
+	user = &TUserInfo{}
+	err = dal.DB.WithContext(ctx).Where("username = ?", username).First(user).Error
+	if err != nil {
+		klog.CtxErrorf(ctx, "An error occurred while getting user information: %v", err)
+		return
 	}
 	return
 }

@@ -1,4 +1,5 @@
-expireTime: 168h
-signKey: hehehe
+timeout: 168h
+maxRefresh: 1h
+secretKey: t1kt0k
 issuer: tiktok
 

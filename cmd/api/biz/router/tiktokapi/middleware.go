@@ -3,6 +3,7 @@
 package Tiktokapi
 
 import (
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/mw"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -13,7 +14,9 @@ func rootMw() []app.HandlerFunc {
 
 func _douyinMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.JWTHandler(),
+	}
 }
 
 func _commentMw() []app.HandlerFunc {
@@ -108,7 +111,9 @@ func _publishMw() []app.HandlerFunc {
 
 func _action2Mw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.PublishCheck(),
+	}
 }
 
 func _publish_ctionMw() []app.HandlerFunc {
@@ -198,7 +203,9 @@ func _getuserinfoMw() []app.HandlerFunc {
 
 func _loginMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.LengthCheck(),
+	}
 }
 
 func _userloginMw() []app.HandlerFunc {
@@ -208,10 +215,17 @@ func _userloginMw() []app.HandlerFunc {
 
 func _registerMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.LengthCheck(),
+	}
 }
 
 func _userregistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _userregisterMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

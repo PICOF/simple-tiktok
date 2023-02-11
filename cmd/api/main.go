@@ -4,11 +4,12 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/hertz-contrib/gzip"
 )
 
 func main() {
-	h := server.Default()
-
+	h := server.Default(server.WithMaxRequestBodySize(20 << 20))
+	h.Use(gzip.Gzip(gzip.DefaultCompression))
 	register(h)
 	h.Spin()
 }

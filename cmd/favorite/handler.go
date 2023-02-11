@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/favorite/favoriteaction"
 	favorite "github.com/PICOF/simple-tiktok/kitex_gen/favorite"
 )
 
@@ -11,11 +12,11 @@ type FavoriteServiceImpl struct{}
 // LikeAction implements the FavoriteServiceImpl interface.
 func (s *FavoriteServiceImpl) LikeAction(ctx context.Context, request *favorite.LikeRequest) (resp *favorite.LikeResponse, err error) {
 	// TODO: Your code here...
-	return
+	return favoriteaction.FavoriteAction(ctx, request)
 }
 
 // GetLikeList implements the FavoriteServiceImpl interface.
-func (s *FavoriteServiceImpl) GetLikeList(ctx context.Context, request *favorite.LikeRequest) (resp *favorite.LikeListResponse, err error) {
+func (s *FavoriteServiceImpl) GetLikeList(ctx context.Context, request *favorite.LikeListRequest) (resp *favorite.LikeListResponse, err error) {
 	// TODO: Your code here...
-	return
+	return favoriteaction.FavoriteList(ctx, request)
 }

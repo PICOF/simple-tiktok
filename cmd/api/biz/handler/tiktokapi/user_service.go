@@ -4,8 +4,8 @@ package tiktokapi
 
 import (
 	"context"
-
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/user"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -21,9 +21,19 @@ func UserRegist(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.RegisterResponse)
+	resp, err := user.Register(ctx, &req)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.FeedResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+			NextTime:   nil,
+			VideoList:  nil,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // UserLogin .
@@ -36,10 +46,17 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
+	resp, err := user.Login(ctx, &req)
 
-	resp := new(tiktokapi.LoginResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetUserInfo .
@@ -53,7 +70,31 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.UserInfoResponse)
+	resp, err := user.GetInfo(ctx, &req, c.GetInt64("user_id"))
+
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
+}
+
+// UserRegister .
+// @router /douyin/user/register/ [POST]
+func UserRegister(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req tiktokapi.RegisterRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(tiktokapi.RegisterResponse)
 
 	c.JSON(consts.StatusOK, resp)
 }

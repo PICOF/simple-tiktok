@@ -104,7 +104,7 @@ func Register(r *server.Hertz) {
 			}
 			{
 				_register := _user.Group("/register", _registerMw()...)
-				_register.POST("/", append(_userregistMw(), tiktokapi.UserRegist)...)
+				_register.POST("/", append(_userregisterMw(), tiktokapi.UserRegister)...)
 			}
 		}
 	}

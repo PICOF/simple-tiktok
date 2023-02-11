@@ -1,0 +1,6 @@
+endpoint: "192.168.1.103:9000"
+accessKeyID: tiktok
+secretAccessKey: t1kt0kpass
+secure: false
+videoBucket: tiktok-data
+

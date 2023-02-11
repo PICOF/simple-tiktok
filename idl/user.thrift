@@ -9,13 +9,13 @@ struct UserInfo{
 }
 
 struct RegisterRequest {
-    1: string username (api.query="username")
-    2: string password (api.query="password")
+    1: string username
+    2: string password
 }
 
 struct RegisterResponse {
     1: i64 status_code
-    2: string password
+    2: string status_msg
     3: i64 user_id
     4: string token
 }
@@ -33,8 +33,8 @@ struct LoginResponse {
 }
 
 struct UserInfoRequest {
-    1: string user_id (api.query="user_id")
-    2: string token (api.query="token")
+    1: i64 user_id
+    2: i64 query_id
 }
 
 struct UserInfoResponse {
