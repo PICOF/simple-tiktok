@@ -31,7 +31,9 @@ func _actionMw() []app.HandlerFunc {
 
 func _comment_ctionMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.CommentCheck(),
+	}
 }
 
 func _listMw() []app.HandlerFunc {

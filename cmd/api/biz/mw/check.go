@@ -12,6 +12,8 @@ type checkFailed struct {
 	StatusMessage string `json:"status_msg"`
 }
 
+const publishType = "1"
+
 func LengthCheck() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		password := c.Query("password")
@@ -51,6 +53,14 @@ func PublishCheck() app.HandlerFunc {
 }
 func CommentCheck() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-
+		if c.GetString("action_type") == publishType {
+			text := c.Query("comment_text")
+			length := len([]rune(text))
+			if length == 0 || length > 100 {
+				code, msg := constant.Failed.GetInfo()
+				c.AbortWithStatusJSON(http.StatusBadRequest, checkFailed{StatusCode: code, StatusMessage: msg})
+			}
+		}
+		c.Next(ctx)
 	}
 }

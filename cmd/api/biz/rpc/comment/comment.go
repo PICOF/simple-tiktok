@@ -66,3 +66,18 @@ func Action(ctx context.Context, req *tiktokapi.CommentRequest, userId int64) (r
 	resp, err = Client.CommentAction(ctx, rpcReq)
 	return
 }
+
+func GetCommentList(ctx context.Context, req *tiktokapi.CommentListRequest, userId int64) (resp *comment.CommentListResponse, err error) {
+	var videoId int64
+	videoId, err = strconv.ParseInt(req.VideoID, 10, 64)
+	if err != nil {
+		return
+	}
+	var rpcReq *comment.CommentListRequest
+	rpcReq = &comment.CommentListRequest{
+		UserId:  userId,
+		VideoId: videoId,
+	}
+	resp, err = Client.GetCommentList(ctx, rpcReq)
+	return
+}

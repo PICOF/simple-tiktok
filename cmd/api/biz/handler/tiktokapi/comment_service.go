@@ -4,8 +4,8 @@ package tiktokapi
 
 import (
 	"context"
-
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/comment"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -21,9 +21,18 @@ func CommentAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.CommentResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := comment.Action(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetCommentList .
@@ -37,7 +46,16 @@ func GetCommentList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.CommentListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := comment.GetCommentList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
