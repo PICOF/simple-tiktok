@@ -37,10 +37,7 @@ func InitFavorite() {
 }
 
 func Action(ctx context.Context, req *tiktokapi.LikeRequest, userId int64) (resp *favorite.LikeResponse, err error) {
-	videoId, err := strconv.ParseInt(req.VideoID, 10, 64)
-	if err != nil {
-		return nil, err
-	}
+	videoId, _ := strconv.ParseInt(req.VideoID, 10, 64)
 	var rpcReq = &favorite.LikeRequest{
 		UserId:     userId,
 		VideoId:    videoId,

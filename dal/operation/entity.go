@@ -46,3 +46,11 @@ type TComment struct {
 	GmtCreated time.Time
 	PublicAttr
 }
+
+type TMessage struct {
+	UserId   int64
+	ToUserId int64
+	Content  string
+	SendTime time.Time
+	PublicAttr
+}

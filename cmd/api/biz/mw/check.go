@@ -20,7 +20,7 @@ func LengthCheck() app.HandlerFunc {
 		username := c.Query("username")
 		lp := len(password)
 		ln := len([]rune(username))
-		if ln == 0 || lp == 0 || ln > 32 || lp > 32 {
+		if ln == 0 || lp == 0 || lp < 6 || ln > 32 || lp > 32 {
 			code, msg := constant.Failed.GetInfo()
 			c.AbortWithStatusJSON(http.StatusBadRequest, checkFailed{StatusCode: code, StatusMessage: msg})
 		}
@@ -53,13 +53,24 @@ func PublishCheck() app.HandlerFunc {
 }
 func CommentCheck() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		if c.GetString("action_type") == publishType {
+		if c.Query("action_type") == publishType {
 			text := c.Query("comment_text")
 			length := len([]rune(text))
 			if length == 0 || length > 100 {
 				code, msg := constant.Failed.GetInfo()
 				c.AbortWithStatusJSON(http.StatusBadRequest, checkFailed{StatusCode: code, StatusMessage: msg})
 			}
+		}
+		c.Next(ctx)
+	}
+}
+func MessageCheck() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		content := c.Query("content")
+		length := len([]rune(content))
+		if length == 0 || length > 2048 {
+			code, msg := constant.Failed.GetInfo()
+			c.AbortWithStatusJSON(http.StatusBadRequest, checkFailed{StatusCode: code, StatusMessage: msg})
 		}
 		c.Next(ctx)
 	}

@@ -93,7 +93,9 @@ func _action1Mw() []app.HandlerFunc {
 
 func _sendmessageMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.MessageCheck(),
+	}
 }
 
 func _chatMw() []app.HandlerFunc {
@@ -220,11 +222,6 @@ func _registerMw() []app.HandlerFunc {
 	return []app.HandlerFunc{
 		mw.LengthCheck(),
 	}
-}
-
-func _userregistMw() []app.HandlerFunc {
-	// your code...
-	return nil
 }
 
 func _userregisterMw() []app.HandlerFunc {

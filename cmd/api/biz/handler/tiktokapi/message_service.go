@@ -4,6 +4,7 @@ package tiktokapi
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/message"
 
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -21,9 +22,18 @@ func SendMessage(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.MessageResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := message.SendMessage(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetChatRecord .
@@ -37,7 +47,16 @@ func GetChatRecord(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.ChatRecordResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := message.GetChatRecord(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

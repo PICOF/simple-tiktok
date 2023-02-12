@@ -4,6 +4,7 @@ package tiktokapi
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/relation"
 
 	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -21,9 +22,18 @@ func FollowAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.FollowResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := relation.FollowAction(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetFollowList .
@@ -37,9 +47,18 @@ func GetFollowList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.RelationListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := relation.GetFollowList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetFollowerList .
@@ -53,9 +72,18 @@ func GetFollowerList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.RelationListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := relation.GetFollowerList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }
 
 // GetFriendList .
@@ -69,7 +97,16 @@ func GetFriendList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.RelationListResponse)
+	userId := c.GetInt64("user_id")
+	resp, err := relation.GetFriendList(ctx, &req, userId)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

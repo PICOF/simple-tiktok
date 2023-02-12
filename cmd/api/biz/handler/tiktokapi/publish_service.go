@@ -22,7 +22,7 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 	}
 	data, exist := c.Get("data")
 	if !exist {
-		msg := "请求远程服务时出错"
+		msg := "数据上传出错"
 		c.JSON(consts.StatusInternalServerError, tiktokapi.LoginResponse{
 			StatusCode: -1,
 			StatusMsg:  &msg,

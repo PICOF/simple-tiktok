@@ -6376,7 +6376,7 @@ func (p *RelationListRequest) String() string {
 }
 
 type RelationListResponse struct {
-	StatusCode string      `thrift:"status_code,1" form:"status_code" json:"status_code" query:"status_code"`
+	StatusCode int64       `thrift:"status_code,1" form:"status_code" json:"status_code" query:"status_code"`
 	StatusMsg  *string     `thrift:"status_msg,2,optional" form:"status_msg" json:"status_msg,omitempty" query:"status_msg"`
 	UserList   []*UserInfo `thrift:"user_list,3,optional" form:"user_list" json:"user_list,omitempty" query:"user_list"`
 }
@@ -6385,7 +6385,7 @@ func NewRelationListResponse() *RelationListResponse {
 	return &RelationListResponse{}
 }
 
-func (p *RelationListResponse) GetStatusCode() (v string) {
+func (p *RelationListResponse) GetStatusCode() (v int64) {
 	return p.StatusCode
 }
 
@@ -6441,7 +6441,7 @@ func (p *RelationListResponse) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -6501,7 +6501,7 @@ ReadStructEndError:
 }
 
 func (p *RelationListResponse) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.StatusCode = v
@@ -6576,10 +6576,10 @@ WriteStructEndError:
 }
 
 func (p *RelationListResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("status_code", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("status_code", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.StatusCode); err != nil {
+	if err := oprot.WriteI64(p.StatusCode); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

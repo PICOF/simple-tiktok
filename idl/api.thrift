@@ -184,7 +184,7 @@ struct RelationListRequest {
 }
 
 struct RelationListResponse {
-    1: string status_code
+    1: i64 status_code
     2: optional string status_msg
     3: optional list<UserInfo> user_list
 }
@@ -199,7 +199,7 @@ service RelationService {
 struct MessageInfo {
     1: i64 id
     2: string content
-    3: string create_time
+    3: i64 create_time
 }
 
 struct MessageRequest {
