@@ -18,12 +18,12 @@ case "$1" in
   start)
     echo "Start running..."
     cd ./cmd/api || exit
-    ./api
+    nohup ./api &
     echo "Server start successfully"
     for i in "${!my_module[@]}";
     do
       cd ../"${my_module[$i]}" || exit
-      ./output/bootstrap.sh
+      nohup ./output/bootstrap.sh &
       echo "Module ${my_module[$i]} start successfully"
     done
     echo "Finish.";;
