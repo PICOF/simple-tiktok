@@ -19,7 +19,7 @@ services:
   mysql:
     image: mysql:latest
     volumes:
-      - ./pkg/configs/sql:/docker-entrypoint-initdb.d
+      - ./tiktok_data:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
     environment:
@@ -27,6 +27,14 @@ services:
       - MYSQL_USER=bitdance
       - MYSQL_PASSWORD=linkTiktok
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+    command:
+      mysql –u bitdance –p linkTiktok –D tiktok < /docker-entrypoint-initdb.d/init.sql
+
+  # redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
 
   # ETCD
   Etcd:
@@ -82,7 +90,6 @@ services:
       - '--opentsdbListenAddr=:4242'
       - '--httpListenAddr=:8428'
       - '--influxListenAddr=:8089'
-    restart: always
 
   # Grafana
   grafana:

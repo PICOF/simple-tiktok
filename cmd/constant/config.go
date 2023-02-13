@@ -5,6 +5,16 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	UserServiceName     = "user"
+	PublishServiceName  = "publish"
+	MessageServiceName  = "message"
+	RelationServiceName = "relation"
+	FeedServiceName     = "feed"
+	FavoriteServiceName = "favorite"
+	CommentServiceName  = "comment"
+)
+
 var (
 	ServiceConfig     *viper.Viper
 	ETCDAddress       []string

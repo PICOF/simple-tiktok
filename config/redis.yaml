@@ -1,0 +1,6 @@
+network: tcp
+address: "127.0.0.1:6379"
+password: ""
+DBIndex: 0
+poolSize: 15
+minIdleConns: 10

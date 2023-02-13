@@ -2,12 +2,18 @@ package main
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/constant"
 	user "github.com/PICOF/simple-tiktok/kitex_gen/user/userservice"
 	"github.com/PICOF/simple-tiktok/pkg/config"
 	"github.com/PICOF/simple-tiktok/pkg/logger"
+	"github.com/PICOF/simple-tiktok/pkg/mw"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	etcd "github.com/kitex-contrib/registry-etcd"
 	"github.com/spf13/viper"
 	"log"
 	"net"
@@ -15,15 +21,13 @@ import (
 )
 
 var (
-	userConfig  *viper.Viper
-	address     string
-	serviceName string
+	userConfig *viper.Viper
+	address    string
 )
 
 func init() {
-	userConfig = config.GetConfig("user")
-	address = userConfig.GetString("server.address")
-	serviceName = userConfig.GetString("server.serviceName")
+	userConfig = config.GetConfig("service")
+	address = userConfig.GetString("service.user.address")
 }
 
 func main() {
@@ -39,33 +43,29 @@ func main() {
 	}(f)
 	logger.SetLogger()
 	klog.SetOutput(f)
-	//r, err := etcd.NewEtcdRegistry(constant.ETCDAddress)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//addr, err := net.ResolveTCPAddr("tcp", address)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//provider.NewOpenTelemetryProvider(
-	//	provider.WithServiceName(serviceName),
-	//	provider.WithExportEndpoint(constant.ExportEndpoint),
-	//	provider.WithInsecure(),
-	//)
-	//svr := user.NewServer(new(UserServiceImpl),
-	//	server.WithServiceAddr(addr),
-	//	server.WithRegistry(r),
-	//	server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}),
-	//	server.WithMuxTransport(),
-	//	server.WithSuite(tracing.NewServerSuite()),
-	//	server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
-	//)
-	addr, _ := net.ResolveTCPAddr("tcp", address)
+	r, err := etcd.NewEtcdRegistry(constant.ETCDAddress)
+	if err != nil {
+		panic(err)
+	}
+	addr, err := net.ResolveTCPAddr("tcp", address)
+	if err != nil {
+		panic(err)
+	}
+	provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(constant.UserServiceName),
+		provider.WithExportEndpoint(constant.ExportEndpoint),
+		provider.WithInsecure(),
+	)
 	svr := user.NewServer(new(UserServiceImpl),
 		server.WithServiceAddr(addr),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
+		server.WithRegistry(r),
+		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}),
+		server.WithMuxTransport(),
+		server.WithMiddleware(mw.CommonMiddleware),
+		server.WithMiddleware(mw.ServerMiddleware),
+		server.WithSuite(tracing.NewServerSuite()),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constant.UserServiceName}),
 	)
-	//TODO 换成 ETCD 加其它中间件，但是这玩意只支持 netpoll……
 	err = svr.Run()
 
 	if err != nil {

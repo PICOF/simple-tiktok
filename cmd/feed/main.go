@@ -2,12 +2,18 @@ package main
 
 import (
 	"context"
+	"github.com/PICOF/simple-tiktok/cmd/constant"
 	feed "github.com/PICOF/simple-tiktok/kitex_gen/feed/feedservice"
 	"github.com/PICOF/simple-tiktok/pkg/config"
 	"github.com/PICOF/simple-tiktok/pkg/logger"
+	"github.com/PICOF/simple-tiktok/pkg/mw"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	etcd "github.com/kitex-contrib/registry-etcd"
 	"github.com/spf13/viper"
 	"log"
 	"net"
@@ -15,15 +21,13 @@ import (
 )
 
 var (
-	feedConfig  *viper.Viper
-	address     string
-	serviceName string
+	feedConfig *viper.Viper
+	address    string
 )
 
 func init() {
-	feedConfig = config.GetConfig("feed")
-	address = feedConfig.GetString("server.address")
-	serviceName = feedConfig.GetString("server.serviceName")
+	feedConfig = config.GetConfig("service")
+	address = feedConfig.GetString("service.feed.address")
 }
 
 func main() {
@@ -39,10 +43,28 @@ func main() {
 	}(f)
 	logger.SetLogger()
 	klog.SetOutput(f)
-	addr, _ := net.ResolveTCPAddr("tcp", address)
+	r, err := etcd.NewEtcdRegistry(constant.ETCDAddress)
+	if err != nil {
+		panic(err)
+	}
+	addr, err := net.ResolveTCPAddr("tcp", address)
+	if err != nil {
+		panic(err)
+	}
+	provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(constant.FeedServiceName),
+		provider.WithExportEndpoint(constant.ExportEndpoint),
+		provider.WithInsecure(),
+	)
 	svr := feed.NewServer(new(FeedServiceImpl),
 		server.WithServiceAddr(addr),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
+		server.WithRegistry(r),
+		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}),
+		server.WithMuxTransport(),
+		server.WithMiddleware(mw.CommonMiddleware),
+		server.WithMiddleware(mw.ServerMiddleware),
+		server.WithSuite(tracing.NewServerSuite()),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constant.FeedServiceName}),
 	)
 	err = svr.Run()
 

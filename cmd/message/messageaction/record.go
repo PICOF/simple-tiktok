@@ -4,8 +4,11 @@ import (
 	"context"
 	"github.com/PICOF/simple-tiktok/cmd/constant"
 	"github.com/PICOF/simple-tiktok/dal/operation"
+	"github.com/PICOF/simple-tiktok/dal/redis"
 	"github.com/PICOF/simple-tiktok/kitex_gen/message"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"strconv"
+	"time"
 )
 
 func GetRecord(ctx context.Context, request *message.ChatRecordRequest) (resp *message.ChatRecordResponse, err error) {
@@ -18,6 +21,9 @@ func GetRecord(ctx context.Context, request *message.ChatRecordRequest) (resp *m
 		klog.CtxErrorf(ctx, "Failed to get chat record: %v", err)
 	} else {
 		code, msg = constant.Success.GetInfo()
+	}
+	if length := len(list); length > 0 {
+		redis.Redis.Set("chat_latestTime_"+strconv.FormatInt(request.UserId, 10)+strconv.FormatInt(request.ToUserId, 10), list[length-1].SendTime.UnixMilli(), time.Hour*24)
 	}
 	resp = &message.ChatRecordResponse{
 		StatusCode:  code,

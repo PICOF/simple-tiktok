@@ -3,31 +3,41 @@ package feed
 import (
 	"context"
 	"github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/constant"
 	"github.com/PICOF/simple-tiktok/kitex_gen/feed"
 	"github.com/PICOF/simple-tiktok/kitex_gen/feed/feedservice"
-	"github.com/PICOF/simple-tiktok/pkg/config"
+	"github.com/PICOF/simple-tiktok/pkg/mw"
 	"github.com/cloudwego/kitex/client"
-	"github.com/spf13/viper"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	etcd "github.com/kitex-contrib/registry-etcd"
 )
 
-var (
-	Client      feedservice.Client
-	Config      *viper.Viper
-	address     string
-	serviceName string
-)
+var Client feedservice.Client
 
 func init() {
-	Config = config.GetConfig("feed")
-	address = Config.GetString("server.address")
-	serviceName = Config.GetString("server.serviceName")
 	InitFeed()
 }
 
 func InitFeed() {
+	r, err := etcd.NewEtcdResolver(constant.ETCDAddress)
+	if err != nil {
+		panic(err)
+	}
+	provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(constant.ServerServiceName),
+		provider.WithExportEndpoint(constant.ExportEndpoint),
+		provider.WithInsecure(),
+	)
 	c, err := feedservice.NewClient(
-		serviceName,
-		client.WithHostPorts(address),
+		constant.FeedServiceName,
+		client.WithResolver(r),
+		client.WithMuxConnection(1),
+		client.WithMiddleware(mw.CommonMiddleware),
+		client.WithInstanceMW(mw.ClientMiddleware),
+		client.WithSuite(tracing.NewClientSuite()),
+		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constant.ServerServiceName}),
 	)
 	if err != nil {
 		panic(err)

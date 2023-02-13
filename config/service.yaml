@@ -5,4 +5,18 @@ exportEndpoint: ":4317"
 server:
   name: "tiktokapi"
   address: "127.0.0.1:8888"
-minio:
+service:
+  user:
+    address: ":8881"
+  message:
+    address: ":8882"
+  relation:
+    address: ":8883"
+  favorite:
+    address: ":8884"
+  feed:
+    address: ":8885"
+  publish:
+    address: ":8886"
+  comment:
+    address: ":8887"

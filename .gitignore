@@ -37,3 +37,4 @@ dumped_hertz_remote_config.json
 tiktok_data
 *.mp4
 /config/mysql.yaml
+output

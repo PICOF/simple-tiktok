@@ -5,11 +5,22 @@ package main
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/hertz-contrib/gzip"
+	"github.com/hertz-contrib/obs-opentelemetry/tracing"
+	"github.com/hertz-contrib/pprof"
 )
 
 func main() {
-	h := server.Default(server.WithMaxRequestBodySize(20 << 20))
-	h.Use(gzip.Gzip(gzip.DefaultCompression))
+	tracer, cfg := tracing.NewServerTracer()
+	h := server.Default(
+		server.WithMaxRequestBodySize(20<<20),
+		server.WithHandleMethodNotAllowed(true),
+		tracer,
+	)
+	pprof.Register(h)
+	h.Use(
+		gzip.Gzip(gzip.DefaultCompression),
+		tracing.ServerMiddleware(cfg),
+	)
 	register(h)
 	h.Spin()
 }
