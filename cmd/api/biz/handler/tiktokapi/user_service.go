@@ -4,37 +4,11 @@ package tiktokapi
 
 import (
 	"context"
-	tiktokapi "github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
+	"github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/PICOF/simple-tiktok/cmd/api/biz/rpc/user"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
-
-// UserRegist .
-// @router /douyin/user/register/ [POST]
-func UserRegist(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req tiktokapi.RegisterRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp, err := user.Register(ctx, &req)
-
-	if err != nil && resp == nil {
-		msg := "请求远程服务时出错"
-		c.JSON(consts.StatusInternalServerError, tiktokapi.FeedResponse{
-			StatusCode: -1,
-			StatusMsg:  &msg,
-			NextTime:   nil,
-			VideoList:  nil,
-		})
-	} else {
-		c.JSON(consts.StatusOK, resp)
-	}
-}
 
 // UserLogin .
 // @router /douyin/user/login/ [POST]
@@ -70,7 +44,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp, err := user.GetInfo(ctx, &req, c.GetInt64("user_id"))
+	resp, err := user.GetInfo(ctx, c.GetInt64("user_id"))
 
 	if err != nil && resp == nil {
 		msg := "请求远程服务时出错"
@@ -94,7 +68,17 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(tiktokapi.RegisterResponse)
+	resp, err := user.Register(ctx, &req)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil && resp == nil {
+		msg := "请求远程服务时出错"
+		c.JSON(consts.StatusInternalServerError, tiktokapi.FeedResponse{
+			StatusCode: -1,
+			StatusMsg:  &msg,
+			NextTime:   nil,
+			VideoList:  nil,
+		})
+	} else {
+		c.JSON(consts.StatusOK, resp)
+	}
 }

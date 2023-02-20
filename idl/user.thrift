@@ -6,6 +6,12 @@ struct UserInfo{
     3: i64 follow_count
     4: i64 follower_count
     5: bool is_follow
+    6: optional i64 work_count
+    7: optional i64 favorite_count
+    8: optional i64 total_favorited
+    9: optional string signature
+    10: optional string avatar
+    11: optional string background_image
 }
 
 struct RegisterRequest {

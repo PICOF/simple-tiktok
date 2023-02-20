@@ -33,12 +33,24 @@ func ConvertUserInfo(ctx context.Context, userId int64, info operation.TUserInfo
 		klog.CtxErrorf(ctx, "An error occurred while converting user information: %v", err)
 		return
 	}
+	count, err := operation.GetWorkCount(ctx, info.Id)
+	if err != nil {
+		klog.CtxErrorf(ctx, "An error occurred while converting user information: %v", err)
+		return nil, err
+	}
+	favoriteCount, err := operation.GetFavoriteCount(ctx, info.Id)
+	if err != nil {
+		klog.CtxErrorf(ctx, "An error occurred while converting user information: %v", err)
+		return nil, err
+	}
 	res = &user.UserInfo{
 		Id:            info.Id,
 		Name:          info.Username,
 		FollowCount:   info.FollowCount,
 		FollowerCount: info.FollowerCount,
 		IsFollow:      isFollow,
+		WorkCount:     &count,
+		FavoriteCount: &favoriteCount,
 	}
 	return
 }

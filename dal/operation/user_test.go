@@ -3,6 +3,7 @@ package operation
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 )
 
@@ -32,4 +33,11 @@ func TestWriteUserInfo(t *testing.T) {
 		return
 	}
 	fmt.Println(ret)
+}
+func TestGetWorkCount(t *testing.T) {
+	count, err := GetWorkCount(context.Background(), 24)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(count)
 }

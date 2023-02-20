@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 RUN_NAME="comment"
 
 mkdir -p output/bin

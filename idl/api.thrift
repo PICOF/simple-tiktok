@@ -33,6 +33,12 @@ struct UserInfo{
     3: i64 follow_count
     4: i64 follower_count
     5: bool is_follow
+    6: optional i64 work_count
+    7: optional i64 favorite_count
+    8: optional i64 total_favorited
+    9: optional string signature
+    10: optional string avatar
+    11: optional string background_image
 }
 
 struct RegisterRequest {
@@ -197,14 +203,16 @@ service RelationService {
 }
 
 struct MessageInfo {
-    1: i64 id
-    2: string content
-    3: i64 create_time
+    1: required i64 id
+    2: required i64 to_user_id
+    3: required i64 from_user_id
+    4: required string content
+    5: optional i64 create_time
 }
 
 struct MessageRequest {
     1: string token (api.query="token")
-    2: string to_user_id (api.query="to_user_id")
+    2: i64 to_user_id (api.query="to_user_id")
     3: string action_type (api.query="action_type")
     4: string content (api.query="content")
 }
@@ -216,7 +224,8 @@ struct MessageResponse {
 
 struct ChatRecordRequest {
     1: string token (api.query="token")
-    2: string to_user_id (api.query="to_user_id")
+    2: i64 to_user_id (api.query="to_user_id")
+    3: i64 pre_msg_time (api.query="pre_msg_time")
 }
 
 struct ChatRecordResponse {

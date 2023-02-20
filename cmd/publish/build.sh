@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 RUN_NAME="publish"
 
 mkdir -p output/bin

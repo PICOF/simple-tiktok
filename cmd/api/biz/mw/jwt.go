@@ -24,7 +24,7 @@ func JWTHandler() app.HandlerFunc {
 			token = c.Query("token")
 		}
 		path := string(c.Path())
-		if token != "" || (path != "/douyin/feed/" && path != "/douyin/user/login/" && path != "/douyin/user/register/") {
+		if token != "" || (path == "/douyin/publish/action/" || path == "/douyin/favorite/action/" || path == "/douyin/comment/action/" || path == "/douyin/relation/action/" || path == "/douyin/message/action/" || path == "/douyin/message/chat/") {
 			parseToken, err := jwt.JWTUtil.ParseToken(token)
 			if err != nil {
 				code, msg := constant.Failed.GetInfo()

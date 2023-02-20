@@ -11,7 +11,6 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	etcd "github.com/kitex-contrib/registry-etcd"
-	"strconv"
 )
 
 var Client userservice.Client
@@ -59,11 +58,10 @@ func Login(ctx context.Context, req *tiktokapi.LoginRequest) (login *user.LoginR
 	login, err = Client.UserLogin(ctx, rpcReq)
 	return
 }
-func GetInfo(ctx context.Context, req *tiktokapi.UserInfoRequest, userId int64) (info *user.UserInfoResponse, err error) {
-	queryId, _ := strconv.ParseInt(req.GetUserID(), 10, 64)
+func GetInfo(ctx context.Context, userId int64) (info *user.UserInfoResponse, err error) {
 	var rpcReq = &user.UserInfoRequest{
 		UserId:  userId,
-		QueryId: queryId,
+		QueryId: userId,
 	}
 	info, err = Client.GetUserInfo(ctx, rpcReq)
 	return

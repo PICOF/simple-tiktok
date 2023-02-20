@@ -35,10 +35,13 @@ func GetRecord(ctx context.Context, request *message.ChatRecordRequest) (resp *m
 
 func MessageFormat(list []operation.TMessage) (ret []*message.MessageInfo) {
 	for _, v := range list {
+		createTime := v.SendTime.UnixMilli()
 		info := &message.MessageInfo{
 			Id:         v.Id,
+			ToUserId:   v.ToUserId,
+			FromUserId: v.UserId,
 			Content:    v.Content,
-			CreateTime: v.SendTime.UnixMilli(),
+			CreateTime: &createTime,
 		}
 		ret = append(ret, info)
 	}

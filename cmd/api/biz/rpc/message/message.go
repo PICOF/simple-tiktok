@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/PICOF/simple-tiktok/cmd/api/biz/model/tiktokapi"
 	"github.com/PICOF/simple-tiktok/cmd/constant"
-	"github.com/PICOF/simple-tiktok/dal/redis"
 	"github.com/PICOF/simple-tiktok/kitex_gen/message"
 	"github.com/PICOF/simple-tiktok/kitex_gen/message/messageservice"
 	"github.com/PICOF/simple-tiktok/pkg/mw"
@@ -13,7 +12,6 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	etcd "github.com/kitex-contrib/registry-etcd"
-	"strconv"
 	"time"
 )
 
@@ -51,10 +49,9 @@ func InitMessage() {
 }
 
 func SendMessage(ctx context.Context, req *tiktokapi.MessageRequest, userId int64) (list *message.MessageResponse, err error) {
-	toUserId, _ := strconv.ParseInt(req.GetToUserID(), 10, 64)
 	var rpcReq = &message.MessageRequest{
 		UserId:     userId,
-		ToUserId:   toUserId,
+		ToUserId:   req.GetToUserID(),
 		ActionType: req.ActionType == sendType,
 		Content:    req.Content,
 		SendTime:   time.Now().UnixMilli(),
@@ -63,15 +60,10 @@ func SendMessage(ctx context.Context, req *tiktokapi.MessageRequest, userId int6
 	return
 }
 func GetChatRecord(ctx context.Context, req *tiktokapi.ChatRecordRequest, userId int64) (resp *message.ChatRecordResponse, err error) {
-	toUserId, _ := strconv.ParseInt(req.GetToUserID(), 10, 64)
-	latestTime, err := redis.Redis.Get("chat_latestTime_" + strconv.FormatInt(userId, 10) + req.GetToUserID()).Int64()
-	if err != nil {
-		latestTime = 0
-	}
 	var rpcReq = &message.ChatRecordRequest{
 		UserId:     userId,
-		ToUserId:   toUserId,
-		LatestTime: latestTime,
+		ToUserId:   req.GetToUserID(),
+		LatestTime: req.GetPreMsgTime(),
 	}
 	resp, err = Client.GetChatRecord(ctx, rpcReq)
 	return

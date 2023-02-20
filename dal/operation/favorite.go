@@ -78,3 +78,11 @@ func GetFavoriteList(ctx context.Context, userId int64) (list []TVideoInfo, err 
 	}
 	return
 }
+func GetFavoriteCount(ctx context.Context, userId int64) (count int64, err error) {
+	err = dal.DB.WithContext(ctx).Model(&TLikedVideo{}).Where("user_id = ?", userId).Count(&count).Error
+	if err != nil {
+		klog.CtxErrorf(ctx, "An error occurred while getting user favorite_count: %v", err)
+		return
+	}
+	return
+}

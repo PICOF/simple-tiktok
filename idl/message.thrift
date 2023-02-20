@@ -1,9 +1,11 @@
 namespace go message
 
 struct MessageInfo {
-    1: i64 id
-    2: string content
-    3: i64 create_time
+    1: required i64 id
+    2: required i64 to_user_id
+    3: required i64 from_user_id
+    4: required string content
+    5: optional i64 create_time
 }
 
 struct MessageRequest {

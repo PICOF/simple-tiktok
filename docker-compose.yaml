@@ -27,8 +27,6 @@ services:
       - MYSQL_USER=bitdance
       - MYSQL_PASSWORD=linkTiktok
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
-    command:
-      mysql –u bitdance –p linkTiktok –D tiktok < /docker-entrypoint-initdb.d/init.sql
 
   # redis
   redis:
