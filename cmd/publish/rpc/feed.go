@@ -17,10 +17,10 @@ import (
 var Client feedservice.Client
 
 func init() {
-	InitUser()
+	InitFeed()
 }
 
-func InitUser() {
+func InitFeed() {
 	r, err := etcd.NewEtcdResolver(constant.ETCDAddress)
 	if err != nil {
 		panic(err)
